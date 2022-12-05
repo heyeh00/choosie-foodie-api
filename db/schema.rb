@@ -34,6 +34,17 @@ ActiveRecord::Schema[7.0].define(version: 2022_12_05_055819) do
     t.index ["user_id"], name: "index_events_on_user_id"
   end
 
+  create_table "restaurant_picks", force: :cascade do |t|
+    t.bigint "user_id", null: false
+    t.bigint "event_id", null: false
+    t.bigint "event_restaurant_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["event_id"], name: "index_restaurant_picks_on_event_id"
+    t.index ["event_restaurant_id"], name: "index_restaurant_picks_on_event_restaurant_id"
+    t.index ["user_id"], name: "index_restaurant_picks_on_user_id"
+  end
+
   create_table "restaurants", force: :cascade do |t|
     t.string "name"
     t.string "address"
@@ -44,18 +55,6 @@ ActiveRecord::Schema[7.0].define(version: 2022_12_05_055819) do
     t.integer "rating"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-  end
-
-  create_table "swipes", force: :cascade do |t|
-    t.bigint "user_id", null: false
-    t.bigint "event_id", null: false
-    t.bigint "event_restaurant_id", null: false
-    t.boolean "choice"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.index ["event_id"], name: "index_swipes_on_event_id"
-    t.index ["event_restaurant_id"], name: "index_swipes_on_event_restaurant_id"
-    t.index ["user_id"], name: "index_swipes_on_user_id"
   end
 
   create_table "users", force: :cascade do |t|
@@ -69,7 +68,7 @@ ActiveRecord::Schema[7.0].define(version: 2022_12_05_055819) do
   add_foreign_key "event_restaurants", "events"
   add_foreign_key "event_restaurants", "restaurants"
   add_foreign_key "events", "users"
-  add_foreign_key "swipes", "event_restaurants"
-  add_foreign_key "swipes", "events"
-  add_foreign_key "swipes", "users"
+  add_foreign_key "restaurant_picks", "event_restaurants"
+  add_foreign_key "restaurant_picks", "events"
+  add_foreign_key "restaurant_picks", "users"
 end

@@ -4,10 +4,8 @@ one:
   user: one
   event: one
   event_restaurant: one
-  choice: false
 
 two:
   user: two
   event: two
   event_restaurant: two
-  choice: false
