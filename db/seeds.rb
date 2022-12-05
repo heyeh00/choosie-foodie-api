@@ -8,6 +8,7 @@
 
 
 puts "destroying all restaurants"
+Restaurant.destroy_all
 
 100.times do
   restaurant = Restaurant.create(

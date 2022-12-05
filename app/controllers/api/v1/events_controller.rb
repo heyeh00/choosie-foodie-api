@@ -26,7 +26,22 @@ class Api::V1::EventsController < ApplicationController
     params.require(:event).permit(:event_name, :datetime, :price_min, :price_max, :cuisine)
   end
 
+  def filter_restaurants
+    cuisines = params(:cuisine)
+    restaurants = []
+    cuisines.each do |cuisine|
+      Restaurant.all.each do |restaurant|
+        restaurants.push(restaurant) if restaurant.cuisine == cuisine
+      end
+    end
+  end
+
   def generate_event_restaurants
-    EventRestaurant.create(event: @event, restaurant: Restaurant.all.sample(20))
+    # EventRestaurant.create(event: @event, restaurant: Restaurant.all.sample(20))
+    restaurants = filter_restaurants
+    EventRestaurant.create(
+      event: @event,
+      restaurant: restaurants.sample(20)
+    )
   end
 end
