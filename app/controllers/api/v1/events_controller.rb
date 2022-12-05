@@ -6,8 +6,10 @@ class Api::V1::EventsController < ApplicationController
 
   def create
     @event = Event.new(event_params)
+    @event_restaurants = generate_event_restaurants
     if @event.save
       render json: { event: @event }
+      render json: { event_restaurants: @event_restaurants }
     else
       render json: { status: 'fail', msg: 'failed to create new event' }
     end
@@ -22,5 +24,9 @@ class Api::V1::EventsController < ApplicationController
 
   def event_params
     params.require(:event).permit(:event_name, :datetime, :price_min, :price_max, :cuisine)
+  end
+
+  def generate_event_restaurants
+    EventRestaurant.create(event: @event, restaurant: Restaurant.all.sample(20))
   end
 end
