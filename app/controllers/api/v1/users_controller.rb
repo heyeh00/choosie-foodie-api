@@ -7,7 +7,7 @@ class Api::V1::UsersController < Api::V1::BaseController
     @user = User.find(params[:id])
     p "===== #{@user.id} ====="
     @user.update(user_params)
-    p "===== #{user_[paras]} ====="
+    p "===== #{user_params} ====="
     render json: { user: @user }
   end
 
