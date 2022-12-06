@@ -38,38 +38,40 @@ class Api::V1::EventsController < Api::V1::BaseController
   end
 
   def event_params
-    params.require(:event).permit(:user_id, :event_name, :datetime, :price_min, :price_max, :cuisine)
+    params.require(:event).permit(:user_id, :event_name, :datetime, :price_min, :price_max, :cuisines)
   end
 
-  # def filter_restaurants
-  #   # This filters all restaurants by user selected cuisine types
-  #   cuisines = params[:cuisine]
-  #   if cuisines.empty?
-  #     restaurants = Restaurant.all
-  #   else
-  #     restaurants = []
-  #     cuisines.each do |cuisine|
-  #       Restaurant.all.each do |restaurant|
-  #         restaurants.push(restaurant) if restaurant.cuisine == cuisine
-  #       end
-  #     end
-  #   end
-  #   restaurants
-  # end
-
   def filter_restaurants
-    if params[:cuisine]
-      cuisine = params[:cuisine]
-      restaurants = Restaurant.all.select { |restaurant| restaurant.cuisine == cuisine }
-    else
+    # This filters all restaurants by user selected cuisine types
+    cuisines = params[:cuisines]
+    if cuisines.empty?
       restaurants = Restaurant.all
+    else
+      restaurants = []
+      cuisines.each do |cuisine|
+        Restaurant.all.each do |restaurant|
+          restaurants.push(restaurant) if restaurant.cuisine == cuisine
+        end
+      end
     end
     restaurants
   end
 
+  # This only works for a single cuisine
+  # def filter_restaurants
+  #   if params[:cuisine]
+  #     cuisine = params[:cuisine]
+  #     restaurants = Restaurant.all.select { |restaurant| restaurant.cuisine == cuisine }
+  #   else
+  #     restaurants = Restaurant.all
+  #   end
+  #   restaurants
+  # end
+
   def generate_event_restaurants
     # Generate 20 event_restaurants for users to choose from
-    restaurants = filter_restaurants.sample(20)
+    filtered = filter_restaurants
+    restaurants = filtered.sample(20)
     restaurants.each do |restaurant|
       EventRestaurant.create(
         event: @event,
