@@ -15,11 +15,12 @@ class Api::V1::EventsController < Api::V1::BaseController
   def create
     # cuisine_categories = generate_cuisine_list
     # render json: { cuisine_categories: }
+    set_user
     @event = Event.new(event_params)
-    @event_restaurants = generate_event_restaurants
+    puts "EVENT CREATE #{@event}"
     if @event.save
+      @event_restaurants = generate_event_restaurants
       render json: { event: @event }
-      render json: { event_restaurants: @event_restaurants }
     else
       render json: { status: 'fail', msg: 'failed to create new event' }
     end
@@ -32,32 +33,48 @@ class Api::V1::EventsController < Api::V1::BaseController
 
   private
 
-  def event_params
-    params.require(:event).permit(:event_name, :datetime, :price_min, :price_max, :cuisine)
+  def set_user
+    @user = @current_user
   end
 
+  def event_params
+    params.require(:event).permit(:user_id, :event_name, :datetime, :price_min, :price_max, :cuisine)
+  end
+
+  # def filter_restaurants
+  #   # This filters all restaurants by user selected cuisine types
+  #   cuisines = params[:cuisine]
+  #   if cuisines.empty?
+  #     restaurants = Restaurant.all
+  #   else
+  #     restaurants = []
+  #     cuisines.each do |cuisine|
+  #       Restaurant.all.each do |restaurant|
+  #         restaurants.push(restaurant) if restaurant.cuisine == cuisine
+  #       end
+  #     end
+  #   end
+  #   restaurants
+  # end
+
   def filter_restaurants
-    # This filters all restaurants by user selected cuisine types
-    cuisines = params(:cuisine)
-    if cuisines.empty?
-      restaurants = Restaurant.all
+    if params[:cuisine]
+      cuisine = params[:cuisine]
+      restaurants = Restaurant.all.select { |restaurant| restaurant.cuisine == cuisine }
     else
-      restaurants = []
-      cuisines.each do |cuisine|
-        Restaurant.all.each do |restaurant|
-          restaurants.push(restaurant) if restaurant.cuisine == cuisine
-        end
-      end
+      restaurants = Restaurant.all
     end
     restaurants
   end
 
   def generate_event_restaurants
     # Generate 20 event_restaurants for users to choose from
-    restaurants = filter_restaurants
-    EventRestaurant.create(
-      event: @event,
-      restaurant: restaurants.sample(20)
-    )
+    restaurants = filter_restaurants.sample(20)
+    restaurants.each do |restaurant|
+      EventRestaurant.create(
+        event: @event,
+        restaurant:
+      )
+    end
   end
 end
