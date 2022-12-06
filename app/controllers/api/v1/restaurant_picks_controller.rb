@@ -1,4 +1,4 @@
-class Api::V1::RestaurantPicksController < ApplicationController
+class Api::V1::RestaurantPicksController < Api::V1::BaseController
   def create
     @restaurant_pick = RestaurantPick.create(
       user: current_user,

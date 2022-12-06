@@ -6,6 +6,7 @@ Rails.application.routes.draw do
         resources :event_restaurants, only: %i[show]
       end
       resources :restaurant_picks, only: %i[create]
+      resources :users, only: :update
     end
   end
 end
