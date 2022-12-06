@@ -8,6 +8,9 @@ class Api::V1::BaseController < ActionController::Base
   def verify_request
     token = get_jwt_token
     if token.present?
+      p "======TOKEN======="
+      p token
+      p "======TOKEN======="
       data = jwt_decode(token)
       user_id = data[:user_id]
       @current_user = User.find(user_id) # set
