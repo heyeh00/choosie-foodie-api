@@ -1,10 +1,20 @@
 class Api::V1::EventsController < Api::V1::BaseController
+  skip_before_action :verify_request
 
   def index
     @events = Event.all.select { |event| event.user == current_user }
   end
 
+  def generate_cuisine_list
+    # randomly generate list of 7 unique cuisines for users to filter
+    restaurants = Restaurant.all
+    cuisines = restaurants.map { |i| i[:cuisine] }.uniq.sample(9)
+    render json: { cuisines: }
+  end
+
   def create
+    # cuisine_categories = generate_cuisine_list
+    # render json: { cuisine_categories: }
     @event = Event.new(event_params)
     @event_restaurants = generate_event_restaurants
     if @event.save
@@ -27,17 +37,23 @@ class Api::V1::EventsController < Api::V1::BaseController
   end
 
   def filter_restaurants
+    # This filters all restaurants by user selected cuisine types
     cuisines = params(:cuisine)
-    restaurants = []
-    cuisines.each do |cuisine|
-      Restaurant.all.each do |restaurant|
-        restaurants.push(restaurant) if restaurant.cuisine == cuisine
+    if cuisines.empty?
+      restaurants = Restaurant.all
+    else
+      restaurants = []
+      cuisines.each do |cuisine|
+        Restaurant.all.each do |restaurant|
+          restaurants.push(restaurant) if restaurant.cuisine == cuisine
+        end
       end
     end
+    restaurants
   end
 
   def generate_event_restaurants
-    # EventRestaurant.create(event: @event, restaurant: Restaurant.all.sample(20))
+    # Generate 20 event_restaurants for users to choose from
     restaurants = filter_restaurants
     EventRestaurant.create(
       event: @event,
