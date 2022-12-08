@@ -8,7 +8,7 @@
 
 
 puts "destroying all restaurants"
-Restaurant.destroy_all
+# Restaurant.destroy_all
 
 cuisines = [
   {
@@ -22,16 +22,16 @@ cuisines = [
   },
   {
     name: 'Italian',
-  },   
+  },
   {
     name: 'Japanese',
-  },     
+  },
   {
     name: 'Spanish',
-  },   
+  },
   {
     name: 'Mexican',
-  },   
+  },
   {
     name: 'Thai',
   },
@@ -43,14 +43,16 @@ cuisines = [
   }
 ]
 
+
 100.times do
+  cuisine = cuisines.sample
   restaurant = Restaurant.create(
     name: Faker::Restaurant.name,
     address: "#{Faker::Address.street_address} Shanghai",
-    cuisine: cuisines.sample(1).name,
+    cuisine: cuisine[:name],
     phone_number: Faker::PhoneNumber.cell_phone,
-    ave_price: [100..500].sample,
-    rating: [1..5].sample
+    ave_price: (100..500).to_a.sample,
+    rating: (1..5).to_a.sample
   )
   puts restaurant.name
 end
