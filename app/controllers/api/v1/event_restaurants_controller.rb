@@ -3,11 +3,12 @@ class Api::V1::EventRestaurantsController < Api::V1::BaseController
 
   def index
     set_event
-    @event_restaurants = @event.event_restaurants
-    render json: { event_restaurants: @event_restaurants }
-  end
-
-  def show
+    # @event.event_restaurants
+    # @event_restaurants = []
+    # @event.event_restaurants.each do |event_restaurant|
+    #   @event_restaurants.push(event_restaurant)
+    # end
+    # render json: { event_restaurants: @event.event_restaurants }
   end
 
   private
@@ -15,7 +16,4 @@ class Api::V1::EventRestaurantsController < Api::V1::BaseController
   def set_event
     @event = Event.find(params[:event_id])
   end
-
-
-
 end

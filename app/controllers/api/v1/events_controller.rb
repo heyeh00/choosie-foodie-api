@@ -27,11 +27,23 @@ class Api::V1::EventsController < Api::V1::BaseController
   end
 
   def show
-    @event = Event.find(params[:id])
-    render json: { event: @event }
+    set_event
+    all_picks = @event.restaurant_picks
+    all_picks_ids = []
+    all_picks.each do |pick|
+      all_picks_ids.push(pick.event_restaurant_id)
+    end
+    result_id = all_picks_ids.max_by { |i| all_picks_ids.count(i) }
+    event_restaurant = EventRestaurant.find(result_id)
+    restaurant = event_restaurant.restaurant
+    render json: { restaurant: }
   end
 
   private
+
+  def set_event
+    @event = Event.find(params[:id])
+  end
 
   def set_user
     @user = @current_user
@@ -44,7 +56,7 @@ class Api::V1::EventsController < Api::V1::BaseController
   def filter_restaurants
     # This filters all restaurants by user selected cuisine types
     cuisines = params[:cuisines]
-    if cuisines.empty?
+    if cuisines.nil?
       restaurants = Restaurant.all
     else
       restaurants = []
