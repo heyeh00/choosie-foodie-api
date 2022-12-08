@@ -10,11 +10,44 @@
 puts "destroying all restaurants"
 Restaurant.destroy_all
 
+cuisines = [
+  {
+    name: 'Any',
+  },
+  {
+    name: "Korean",
+  },
+  {
+    name: 'Indian',
+  },
+  {
+    name: 'Italian',
+  },   
+  {
+    name: 'Japanese',
+  },     
+  {
+    name: 'Spanish',
+  },   
+  {
+    name: 'Mexican',
+  },   
+  {
+    name: 'Thai',
+  },
+  {
+    name: 'Vegetarian',
+  },
+  {
+    name: 'Hotpot',
+  }
+]
+
 100.times do
   restaurant = Restaurant.create(
     name: Faker::Restaurant.name,
     address: "#{Faker::Address.street_address} Shanghai",
-    cuisine: Faker::Restaurant.type,
+    cuisine: cuisines.sample(1).name,
     phone_number: Faker::PhoneNumber.cell_phone,
     ave_price: [100..500].sample,
     rating: [1..5].sample
