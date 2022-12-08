@@ -1,5 +1,21 @@
 class Api::V1::EventRestaurantsController < Api::V1::BaseController
-  def show
+  skip_before_action :verify_request
 
+  def index
+    set_event
+    @event_restaurants = @event.event_restaurants
+    render json: { event_restaurants: @event_restaurants }
   end
+
+  def show
+  end
+
+  private
+
+  def set_event
+    @event = Event.find(params[:event_id])
+  end
+
+
+
 end

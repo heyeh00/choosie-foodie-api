@@ -6,7 +6,7 @@ class Api::V1::EventsController < Api::V1::BaseController
   end
 
   def generate_cuisine_list
-    # randomly generate list of 7 unique cuisines for users to filter
+    # randomly generate list of 9 unique cuisines for users to filter
     restaurants = Restaurant.all
     cuisines = restaurants.map { |i| i[:cuisine] }.uniq.sample(9)
     render json: { cuisines: }
@@ -56,17 +56,6 @@ class Api::V1::EventsController < Api::V1::BaseController
     end
     restaurants
   end
-
-  # This only works for a single cuisine
-  # def filter_restaurants
-  #   if params[:cuisine]
-  #     cuisine = params[:cuisine]
-  #     restaurants = Restaurant.all.select { |restaurant| restaurant.cuisine == cuisine }
-  #   else
-  #     restaurants = Restaurant.all
-  #   end
-  #   restaurants
-  # end
 
   def generate_event_restaurants
     # Generate 20 event_restaurants for users to choose from
