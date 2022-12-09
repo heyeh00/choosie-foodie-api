@@ -10,6 +10,13 @@ class Api::V1::EventsController < Api::V1::BaseController
     restaurants = Restaurant.all
     cuisines = restaurants.map { |i| i[:cuisine] }.uniq.sample(9)
     render json: { cuisines: }
+
+    # the JSON file generated needs to have the name, icon path (from active storage) and active: false
+    # [{
+    #   name: "Korean",
+    #   icon: "/icons/Food Icons/bibimbap.png",
+    #   selected: false
+    # },]
   end
 
   def create
@@ -17,6 +24,7 @@ class Api::V1::EventsController < Api::V1::BaseController
     # render json: { cuisine_categories: }
     set_user
     @event = Event.new(event_params)
+
     puts "EVENT CREATE #{@event}"
     if @event.save
       @event_restaurants = generate_event_restaurants
@@ -38,12 +46,12 @@ class Api::V1::EventsController < Api::V1::BaseController
   end
 
   def event_params
-    params.require(:event).permit(:user_id, :event_name, :datetime, :price_min, :price_max, :cuisines)
+    params.require(:event).permit(:user_id, :event_name, :datetime, :price_min, :price_max, :cuisine => [])
   end
 
   def filter_restaurants
     # This filters all restaurants by user selected cuisine types
-    cuisines = params[:cuisines]
+    cuisines = params[:cuisine]
     if cuisines.empty?
       restaurants = Restaurant.all
     else
