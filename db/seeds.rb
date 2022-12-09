@@ -7,50 +7,39 @@
 #   Character.create(name: "Luke", movie: movies.first)
 
 
-puts "destroying all restaurants"
+puts "destroying all"
 Restaurant.destroy_all
+Event.destroy_all
+RestaurantPick.destroy_all
 
 cuisines = [
-  {
-    name: 'Any',
-  },
-  {
-    name: "Korean",
-  },
-  {
-    name: 'Indian',
-  },
-  {
-    name: 'Italian',
-  },   
-  {
-    name: 'Japanese',
-  },     
-  {
-    name: 'Spanish',
-  },   
-  {
-    name: 'Mexican',
-  },   
-  {
-    name: 'Thai',
-  },
-  {
-    name: 'Vegetarian',
-  },
-  {
-    name: 'Hotpot',
-  }
+"Korean",
+
+"Indian",
+
+"Italian",
+
+"Japanese",
+
+"Spanish",
+
+"Mexican",
+
+"Thai",
+
+"Vegetarian",
+
+"Hotpot"
 ]
 
 100.times do
   restaurant = Restaurant.create(
     name: Faker::Restaurant.name,
     address: "#{Faker::Address.street_address} Shanghai",
-    cuisine: cuisines.sample(1).name,
+    cuisine: cuisines.sample(1)[0],
     phone_number: Faker::PhoneNumber.cell_phone,
-    ave_price: [100..500].sample,
-    rating: [1..5].sample
+    ave_price: (100..500).to_a.sample,
+    rating: (1..5).to_a.sample
   )
   puts restaurant.name
 end
