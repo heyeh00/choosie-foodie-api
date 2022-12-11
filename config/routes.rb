@@ -1,9 +1,9 @@
 Rails.application.routes.draw do
-  namespace :api do
-    namespace :v1 do
-      get 'restaurants/index'
-    end
-  end
+  # namespace :api do
+  #   namespace :v1 do
+  #     get 'restaurants/index'
+  #   end
+  # end
   namespace :api, defaults: { format: :json } do
     namespace :v1 do
       post 'login', to: 'sessions#login', as: :login
@@ -15,7 +15,7 @@ Rails.application.routes.draw do
       end
       resources :restaurant_picks, only: %i[create]
       resources :restaurants, only: %i[index]
-      resources :users, only: :update
+      resources :users, only: %i[show update]
     end
   end
 end

@@ -2,7 +2,6 @@ class Api::V1::EventsController < Api::V1::BaseController
   skip_before_action :verify_request
 
   def index
-    @events = Event.all.select { |event| event.user == current_user }
   end
 
   def generate_cuisine_list
@@ -15,7 +14,6 @@ class Api::V1::EventsController < Api::V1::BaseController
   def create
     set_user
     @event = Event.new(event_params)
-    puts "EVENT CREATE #{@event}"
     if @event.save
       @event_restaurants = generate_event_restaurants
       render json: { event: @event }
@@ -61,6 +59,7 @@ class Api::V1::EventsController < Api::V1::BaseController
       attendee = pick.user
       @attendees.push(attendee)
     end
+    @attendees = @attendees.uniq
   end
 
   def set_event
