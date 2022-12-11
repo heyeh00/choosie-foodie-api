@@ -2,7 +2,6 @@ class Api::V1::EventsController < Api::V1::BaseController
   skip_before_action :verify_request
 
   def index
-    @events = Event.all.select { |event| event.user == current_user }
   end
 
   def generate_cuisine_list
@@ -13,11 +12,8 @@ class Api::V1::EventsController < Api::V1::BaseController
   end
 
   def create
-    # cuisine_categories = generate_cuisine_list
-    # render json: { cuisine_categories: }
     set_user
     @event = Event.new(event_params)
-    puts "EVENT CREATE #{@event}"
     if @event.save
       @event_restaurants = generate_event_restaurants
       render json: { event: @event }
@@ -28,6 +24,23 @@ class Api::V1::EventsController < Api::V1::BaseController
 
   def show
     set_event
+    render json: { event: @event }
+  end
+
+  def event_result
+    # GO TO views/api/v1/events/event_result.json.jbuilder
+    # Get event info
+    set_event
+    # Get the most voted restaurant
+    result_restaurant
+    # Get all of the people attending
+    event_attendees
+  end
+
+  private
+
+  def result_restaurant
+    set_event
     all_picks = @event.restaurant_picks
     all_picks_ids = []
     all_picks.each do |pick|
@@ -35,11 +48,19 @@ class Api::V1::EventsController < Api::V1::BaseController
     end
     result_id = all_picks_ids.max_by { |i| all_picks_ids.count(i) }
     event_restaurant = EventRestaurant.find(result_id)
-    restaurant = event_restaurant.restaurant
-    render json: { restaurant: }
+    @restaurant = event_restaurant.restaurant
   end
 
-  private
+  def event_attendees
+    set_event
+    @attendees = []
+    attendee_picks = @event.restaurant_picks
+    attendee_picks.each do |pick|
+      attendee = pick.user
+      @attendees.push(attendee)
+    end
+    @attendees = @attendees.uniq
+  end
 
   def set_event
     @event = Event.find(params[:id])
