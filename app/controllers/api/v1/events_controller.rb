@@ -30,6 +30,18 @@ class Api::V1::EventsController < Api::V1::BaseController
   end
 
   def event_result
+    # GO TO views/api/v1/events/event_result.json.jbuilder
+    # Get event info
+    set_event
+    # Get the most voted restaurant
+    result_restaurant
+    # Get all of the people attending
+    event_attendees
+  end
+
+  private
+
+  def result_restaurant
     set_event
     all_picks = @event.restaurant_picks
     all_picks_ids = []
@@ -38,22 +50,18 @@ class Api::V1::EventsController < Api::V1::BaseController
     end
     result_id = all_picks_ids.max_by { |i| all_picks_ids.count(i) }
     event_restaurant = EventRestaurant.find(result_id)
-    restaurant = event_restaurant.restaurant
-    render json: { restaurant: }
+    @restaurant = event_restaurant.restaurant
   end
 
   def event_attendees
     set_event
-    attendees = []
+    @attendees = []
     attendee_picks = @event.restaurant_picks
     attendee_picks.each do |pick|
       attendee = pick.user
-      attendees.push(attendee)
+      @attendees.push(attendee)
     end
-    render json: { attendees: }
   end
-
-  private
 
   def set_event
     @event = Event.find(params[:id])
