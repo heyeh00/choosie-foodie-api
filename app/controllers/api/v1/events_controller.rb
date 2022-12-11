@@ -13,8 +13,6 @@ class Api::V1::EventsController < Api::V1::BaseController
   end
 
   def create
-    # cuisine_categories = generate_cuisine_list
-    # render json: { cuisine_categories: }
     set_user
     @event = Event.new(event_params)
     puts "EVENT CREATE #{@event}"
@@ -28,6 +26,11 @@ class Api::V1::EventsController < Api::V1::BaseController
 
   def show
     set_event
+    render json: { event: @event }
+  end
+
+  def event_result
+    set_event
     all_picks = @event.restaurant_picks
     all_picks_ids = []
     all_picks.each do |pick|
@@ -37,6 +40,17 @@ class Api::V1::EventsController < Api::V1::BaseController
     event_restaurant = EventRestaurant.find(result_id)
     restaurant = event_restaurant.restaurant
     render json: { restaurant: }
+  end
+
+  def event_attendees
+    set_event
+    attendees = []
+    attendee_picks = @event.restaurant_picks
+    attendee_picks.each do |pick|
+      attendee = pick.user
+      attendees.push(attendee)
+    end
+    render json: { attendees: }
   end
 
   private

@@ -8,6 +8,8 @@ Rails.application.routes.draw do
     namespace :v1 do
       post 'login', to: 'sessions#login', as: :login
       get 'cuisines', to: 'events#generate_cuisine_list', as: :cuisines
+      get 'event_result/:id', to: 'events#event_result', as: :event_result
+      get 'event_attendees/:id', to: 'events#event_attendees', as: :event_attendees
       resources :events, only: %i[index create show] do
         resources :event_restaurants, only: %i[index]
       end
