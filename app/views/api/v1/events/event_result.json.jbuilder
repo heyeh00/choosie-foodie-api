@@ -1,5 +1,5 @@
 json.event do
-  json.extract! @event, :id, :datetime
+  json.extract! @event, :id, :datetime, :user_id, :closed
   json.date @event.datetime.strftime("%F")
   json.time @event.datetime.strftime("%H:%M")
 end

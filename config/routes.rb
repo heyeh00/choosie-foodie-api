@@ -9,8 +9,9 @@ Rails.application.routes.draw do
       post 'login', to: 'sessions#login', as: :login
       get 'cuisines', to: 'events#generate_cuisine_list', as: :cuisines
       get 'event_result/:id', to: 'events#event_result', as: :event_result
+      get 'events/users/:id', to: 'events#index', as: :events
       get 'event_attendees/:id', to: 'events#event_attendees', as: :event_attendees
-      resources :events, only: %i[index create show] do
+      resources :events, only: %i[create show update] do
         resources :event_restaurants, only: %i[index]
       end
       resources :restaurant_picks, only: %i[create]
