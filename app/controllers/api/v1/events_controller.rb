@@ -2,6 +2,16 @@ class Api::V1::EventsController < Api::V1::BaseController
   skip_before_action :verify_request
 
   def index
+    # Allow profile page to get every event and restaurant result
+    @user = User.find(params[:id])
+    @user_events = []
+    user.restaurant_picks.each do |pick|
+      event = []
+      event.push(pick.event)
+      event.push(pick.restaurant)
+      @events.push(event)
+    end
+    render json: { user_events: @user_events }
   end
 
   def generate_cuisine_list
@@ -20,6 +30,12 @@ class Api::V1::EventsController < Api::V1::BaseController
     else
       render json: { status: 'fail', msg: 'failed to create new event' }
     end
+  end
+
+  def update
+    @event = Event.find(params[:id])
+    @event.update(event_params)
+    render json: { event: @event }
   end
 
   def show
@@ -71,7 +87,7 @@ class Api::V1::EventsController < Api::V1::BaseController
   end
 
   def event_params
-    params.require(:event).permit(:user_id, :event_name, :datetime, :price_min, :price_max, :cuisines)
+    params.require(:event).permit(:user_id, :event_name, :datetime, :price_min, :price_max, :cuisines, :closed)
   end
 
   def filter_restaurants
