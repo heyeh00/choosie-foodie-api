@@ -27,7 +27,7 @@ cuisines = [
 
 "Thai",
 
-"Vegetarian",
+"Veggies",
 
 "Hotpot"
 ]
