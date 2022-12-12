@@ -5,11 +5,11 @@ class Api::V1::EventsController < Api::V1::BaseController
     # Allow profile page to get every event and restaurant result
     @user = User.find(params[:id])
     @user_events = []
-    user.restaurant_picks.each do |pick|
+    @user.restaurant_picks.each do |pick|
       event = []
       event.push(pick.event)
-      event.push(pick.restaurant)
-      @events.push(event)
+      event.push(pick.event_restaurant.restaurant)
+      @user_events.push(event)
     end
     render json: { user_events: @user_events }
   end
