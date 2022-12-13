@@ -9,10 +9,18 @@ class Api::V1::UsersController < Api::V1::BaseController
     render json: { user_events: @events }
   end
 
+  def attach_avatar
+    @user = User.find(params[:id])
+    @user.avatar.attach(params[:avatar])
+    @user.update(image_url: @user.avatar.url)
+    render json: { user: @user, avatar: @user.avatar.url }
+  end
+
   def update
     @user = User.find(params[:id])
     @user.update(user_params)
-    render json: { user: @user }
+    @user.update(image_url: @user.avatar.url)
+    render json: { user: @user, avatar: @user.avatar.url }
   end
 
   private
@@ -26,6 +34,6 @@ class Api::V1::UsersController < Api::V1::BaseController
   end
 
   def user_params
-    params.require(:user).permit(:name, :open_id, :image_url)
+    params.require(:user).permit(:name, :open_id, :image_url, :avatar)
   end
 end

@@ -70,12 +70,16 @@ class Api::V1::EventsController < Api::V1::BaseController
   end
 
   def event_attendees
-    # set_event
     @attendees = []
     attendee_picks = @event.restaurant_picks
+    # attendee_picks.each do |pick|
+    #   attendee = pick.user
+    #   @attendees.push(attendee)
+    # end
     attendee_picks.each do |pick|
-      attendee = pick.user
-      @attendees.push(attendee)
+      user = pick.user
+      user[:image_url] = pick.user.avatar.url
+      @attendees.push(user)
     end
     @attendees = @attendees.uniq
   end

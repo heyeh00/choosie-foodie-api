@@ -11,6 +11,7 @@ Rails.application.routes.draw do
       get 'event_result/:id', to: 'events#event_result', as: :event_result
       get 'events/users/:id', to: 'events#index', as: :events
       get 'event_attendees/:id', to: 'events#event_attendees', as: :event_attendees
+      post 'users/:id/attach_avatar', to: 'users#attach_avatar', as: :attach_avatar
       resources :events, only: %i[create show update] do
         resources :event_restaurants, only: %i[index]
       end

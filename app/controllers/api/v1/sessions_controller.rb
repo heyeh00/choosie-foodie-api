@@ -10,7 +10,7 @@ class Api::V1::SessionsController < Api::V1::BaseController # inherit from base 
     p user
     response.set_header('Authorization', fetch_jwt_token(user))
 
-    render json: { user: }
+    render json: { user:, avatar: user.avatar.url }
   end
 
   private
