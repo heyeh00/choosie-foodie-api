@@ -4,14 +4,16 @@ class Api::V1::EventsController < Api::V1::BaseController
   def index
     # Allow profile page to get every event and restaurant result
     @user = User.find(params[:id])
-    @user_events = []
+    @events = []
     @user.restaurant_picks.each do |pick|
-      event = []
-      event.push(pick.event)
-      event.push(pick.event_restaurant.restaurant)
-      @user_events.push(event)
+      @event_info = {}
+      @event = pick.event
+      @event_info[:event] = @event
+      @event_info[:restaurant] = result_restaurant
+      @event_info[:attendees] = event_attendees
+      @events.push(@event_info)
     end
-    render json: { user_events: @user_events }
+    render json: { user_events: @events }
   end
 
   def generate_cuisine_list
@@ -56,7 +58,7 @@ class Api::V1::EventsController < Api::V1::BaseController
   private
 
   def result_restaurant
-    set_event
+    # set_event
     all_picks = @event.restaurant_picks
     all_picks_ids = []
     all_picks.each do |pick|
@@ -68,7 +70,7 @@ class Api::V1::EventsController < Api::V1::BaseController
   end
 
   def event_attendees
-    set_event
+    # set_event
     @attendees = []
     attendee_picks = @event.restaurant_picks
     attendee_picks.each do |pick|

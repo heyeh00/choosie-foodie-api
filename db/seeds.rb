@@ -13,23 +13,23 @@ Event.destroy_all
 RestaurantPick.destroy_all
 
 cuisines = [
-"Korean",
+"korean",
 
-"Indian",
+"indian",
 
-"Italian",
+"italian",
 
-"Japanese",
+"japanese",
 
-"Spanish",
+"spanish",
 
-"Mexican",
+"mexican",
 
-"Thai",
+"thai",
 
-"Veggies",
+"veggies",
 
-"Hotpot"
+"hotpot"
 ]
 
 100.times do
