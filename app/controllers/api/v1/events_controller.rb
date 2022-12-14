@@ -5,6 +5,8 @@ class Api::V1::EventsController < Api::V1::BaseController
     # Allow profile page to get every event and the event's restaurant_result for a user
     @user = User.find(params[:id])
     @events = []
+
+
     @user.restaurant_picks.each do |pick|
       @event_info = {}
       @event = pick.event
@@ -13,7 +15,9 @@ class Api::V1::EventsController < Api::V1::BaseController
       @event_info[:attendees] = event_attendees
       @events.push(@event_info)
     end
-    render json: { user_events: @events }
+    @events.sort_by! { |event| event[:event].datetime }
+    @events.reverse!
+    render json: { user_events: @events.uniq }
   end
 
   def generate_cuisine_list
