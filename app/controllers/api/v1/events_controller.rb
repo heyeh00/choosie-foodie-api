@@ -2,7 +2,7 @@ class Api::V1::EventsController < Api::V1::BaseController
   skip_before_action :verify_request
 
   def index
-    # Allow profile page to get every event and restaurant result
+    # Allow profile page to get every event and the event's restaurant_result for a user
     @user = User.find(params[:id])
     @events = []
     @user.restaurant_picks.each do |pick|
