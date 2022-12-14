@@ -13,14 +13,14 @@ class Api::V1::UsersController < Api::V1::BaseController
     @user = User.find(params[:id])
     @user.avatar.attach(params[:avatar])
     @user.update(image_url: @user.avatar.url)
-    render json: { user: @user, avatar: @user.avatar.url }
+    render json: { user: @user }
   end
 
   def update
     @user = User.find(params[:id])
     @user.update(user_params)
     @user.update(image_url: @user.avatar.url)
-    render json: { user: @user, avatar: @user.avatar.url }
+    render json: { user: @user }
   end
 
   private
