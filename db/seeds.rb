@@ -5,6 +5,10 @@
 #
 #   movies = Movie.create([{ name: "Star Wars" }, { name: "Lord of the Rings" }])
 #   Character.create(name: "Luke", movie: movies.first)
+require 'rest-client'
+require 'openssl'
+OpenSSL::SSL::VERIFY_PEER = OpenSSL::SSL::VERIFY_NONE
+
 
 
 puts "destroying all"
@@ -12,36 +16,55 @@ Restaurant.destroy_all
 Event.destroy_all
 RestaurantPick.destroy_all
 
-cuisines = [
-"korean",
+# cuisines = [
+# "korean",
 
-"indian",
+# "indian",
 
-"italian",
+# "italian",
 
-"japanese",
+# "japanese",
 
-"spanish",
+# "spanish",
 
-"mexican",
+# "mexican",
 
-"thai",
+# "thai",
 
-"veggies",
+# "veggies",
 
-"hotpot"
-]
+# "hotpot"
+# ]
 
-100.times do
-  restaurant = Restaurant.create(
-    name: Faker::Restaurant.name,
-    address: "#{Faker::Address.street_address} Shanghai",
-    cuisine: cuisines.sample(1)[0],
-    phone_number: Faker::PhoneNumber.cell_phone,
-    ave_price: (100..500).to_a.sample,
-    rating: (1..5).to_a.sample
+# 100.times do
+#   restaurant = Restaurant.create(
+#     name: Faker::Restaurant.name,
+#     address: "#{Faker::Address.street_address} Shanghai",
+#     cuisine: cuisines.sample(1)[0],
+#     phone_number: Faker::PhoneNumber.cell_phone,
+#     ave_price: (100..500).to_a.sample,
+#     rating: (1..5).to_a.sample
+#   )
+#   puts restaurant.name
+# end
+puts "requesting restaurant"
+restaurants_request = RestClient.get 'https://api.diningcity.asia/public/regions/shanghai/restaurants/search?region=shanghai&page=1&per_page=1000&q=&lang=en', :verify_ssl => false
+
+puts "parsing restaurants"
+restaurants_array = JSON.parse(restaurants_request)
+puts restaurants_array
+
+puts "creating restaurants"
+restaurants_array.each do |restaurant|
+  Restaurant.create(
+    name: restaurant["name"],
+    address: restaurant["address"],
+    cuisine: restaurant["cuisines"][0]["name"],
+    ave_price: (restaurant["avg_price"].to_i),
+    image_url: restaurant["cover"],
+    rating: (restaurant["ratings_avg"].to_i)
   )
-  puts restaurant.name
 end
+
 
 puts "Restaurants created!"
