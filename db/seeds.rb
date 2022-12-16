@@ -48,7 +48,7 @@ RestaurantPick.destroy_all
 #   puts restaurant.name
 # end
 puts "requesting restaurant"
-restaurants_request = RestClient.get 'https://api.diningcity.asia/public/regions/shanghai/restaurants/search?region=shanghai&page=1&per_page=1000&q=&lang=en', :verify_ssl => false
+restaurants_request = RestClient.get 'https://api.diningcity.asia/public/regions/shanghai/restaurants/search?region=shanghai&page=1&per_page=300&q=&lang=en', :verify_ssl => false
 
 puts "parsing restaurants"
 restaurants_array = JSON.parse(restaurants_request)
@@ -56,13 +56,20 @@ puts restaurants_array
 
 puts "creating restaurants"
 restaurants_array.each do |restaurant|
+  name = restaurant["name"]
+  address = restaurant["address"]
+  cuisine = restaurant["cuisines"][0].nil? ? "" : restaurant["cuisines"][0]["name"]
+  ave_price = restaurant["avg_price"].to_i
+  image_url = restaurant["cover"],
+  rating = restaurant["ratings_avg"].to_i
+
   Restaurant.create(
-    name: restaurant["name"],
-    address: restaurant["address"],
-    cuisine: restaurant["cuisines"][0]["name"],
-    ave_price: (restaurant["avg_price"].to_i),
-    image_url: restaurant["cover"],
-    rating: (restaurant["ratings_avg"].to_i)
+    name:,
+    address:,
+    cuisine:,
+    ave_price:,
+    image_url:,
+    rating:
   )
 end
 
