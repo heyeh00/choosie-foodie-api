@@ -48,7 +48,7 @@ RestaurantPick.destroy_all
 #   puts restaurant.name
 # end
 puts "requesting restaurant"
-restaurants_request = RestClient.get 'https://api.diningcity.asia/public/regions/shanghai/restaurants/search?region=shanghai&page=1&per_page=300&q=&lang=en', :verify_ssl => false
+restaurants_request = RestClient.get 'https://api.diningcity.asia/public/regions/shanghai/restaurants/search?region=shanghai&page=1&per_page=1000&q=&lang=en', :verify_ssl => false
 
 puts "parsing restaurants"
 restaurants_array = JSON.parse(restaurants_request)
