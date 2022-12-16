@@ -60,7 +60,6 @@ restaurants_array.each do |restaurant|
   address = restaurant["address"]
   cuisine = restaurant["cuisines"][0].nil? ? "" : restaurant["cuisines"][0]["name"]
   ave_price = restaurant["avg_price"].to_i
-  image_url = restaurant["cover"],
   rating = restaurant["ratings_avg"].to_i
 
   Restaurant.create(
@@ -68,7 +67,7 @@ restaurants_array.each do |restaurant|
     address:,
     cuisine:,
     ave_price:,
-    image_url:,
+    image_url: restaurant["cover"],
     rating:
   )
 end
